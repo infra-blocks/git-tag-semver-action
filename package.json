@@ -1,5 +1,5 @@
 {
-  "name": "github-action-typescript-docker-template",
+  "name": "git-tag-semver-action",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/infrastructure-blocks/github-action-typescript-docker-template.git"
+    "url": "git+https://github.com/infrastructure-blocks/git-tag-semver-action.git"
   },
   "author": "PhilLavoie",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/infrastructure-blocks/github-action-typescript-docker-template/issues"
+    "url": "https://github.com/infrastructure-blocks/git-tag-semver-action/issues"
   },
-  "homepage": "https://github.com/infrastructure-blocks/github-action-typescript-docker-template#readme",
+  "homepage": "https://github.com/infrastructure-blocks/git-tag-semver-action#readme",
   "devDependencies": {
     "@infra-blocks/test": "^0.1.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",

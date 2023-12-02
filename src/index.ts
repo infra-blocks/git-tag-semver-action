@@ -2,23 +2,21 @@ import * as core from "@actions/core";
 import { context } from "@actions/github";
 import { createHandler } from "./handler.js";
 import VError from "verror";
-import {
-  checkSupportedEvent,
-  Event,
-  getInputs,
-  stringInput,
-} from "@infra-blocks/github";
+import { getInputs, stringInput } from "@infra-blocks/github";
+import { parseVersion } from "./version.js";
 
 async function main() {
   core.debug(`received context: ${JSON.stringify(context, null, 2)}`);
-  checkSupportedEvent(context.eventName, [Event.Push]);
   const inputs = getInputs({
-    example: stringInput(),
+    ["github-token"]: stringInput(),
+    version: stringInput(),
   });
   const handler = createHandler({
     context,
     config: {
-      example: inputs.example,
+      gitHubToken: inputs["github-token"],
+      // TODO: https://github.com/infrastructure-blocks/ts-github/issues/7 parse the version against choices in the inputs.
+      version: parseVersion(inputs.version),
     },
   });
   const outputs = await handler.handle();

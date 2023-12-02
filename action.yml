@@ -21,6 +21,9 @@ inputs:
   version:
     description: The version bump type. Either "major", "minor" or "patch".
     required: true
+  github-token:
+    description: The GitHub token that will be use to interact with the repository.
+    required: true
 runs:
   using: "docker"
   image: Dockerfile

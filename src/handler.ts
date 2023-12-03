@@ -13,7 +13,6 @@ export interface Handler<O extends Outputs> {
 }
 
 export interface Config {
-  gitHubToken: string;
   version: GitTagVersion;
 }
 
@@ -56,7 +55,6 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
 
   private async getLatestTag(): Promise<string> {
     const versionTags = await this.git.getRemoteTags({
-      remote: this.getGitRemote(),
       pattern: "v*",
     });
     if (core.isDebug()) {
@@ -91,17 +89,11 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
       await this.git.tag({ tag, force: true });
     }
 
-    const remote = this.getGitRemote();
     for (const tag of tags) {
       core.info(`pushing tag ${tag} to remote`);
       // Have to push force here too to update the remote tags if one already existed.
-      await this.git.push({ remote, ref: tag, force: true });
+      await this.git.push({ ref: tag, force: true });
     }
-  }
-
-  private getGitRemote(): string {
-    const repoFullName = this.pullRequest.head.repo.full_name;
-    return `https://${this.config.gitHubToken}@github.com/${repoFullName}.git`;
   }
 }
 

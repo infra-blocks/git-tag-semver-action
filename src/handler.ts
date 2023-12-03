@@ -1,9 +1,7 @@
-import { Context } from "@actions/github/lib/context.js";
 import { getVersionTags, GitTagVersion } from "./version.js";
 import * as core from "@actions/core";
 import { createGitCli, GitCli } from "./git.js";
 import semver from "semver";
-import { PullRequest } from "@infra-blocks/github";
 
 // TODO: move into lib?
 export type Outputs = Record<string, string>;
@@ -21,23 +19,16 @@ export type GitTagSemverOutputs = Outputs;
 export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
   private static ERROR_NAME = "GitTagSemverHandlerError";
 
-  private readonly pullRequest: PullRequest;
   private readonly config: Config;
   private readonly git: GitCli;
 
-  constructor(params: {
-    pullRequest: PullRequest;
-    config: Config;
-    git: GitCli;
-  }) {
-    const { pullRequest, config, git } = params;
-    this.pullRequest = pullRequest;
+  constructor(params: { config: Config; git: GitCli }) {
+    const { config, git } = params;
     this.config = config;
     this.git = git;
   }
 
   async handle(): Promise<GitTagSemverOutputs> {
-    await this.checkoutBaseRef();
     const latestTag = await this.getLatestTag();
     const tags = getVersionTags({
       currentVersion: latestTag,
@@ -45,12 +36,6 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
     });
     await this.tagAndPublish({ tags });
     return {};
-  }
-
-  private async checkoutBaseRef() {
-    const ref = this.pullRequest.base.ref;
-    core.info(`checking out ${ref}`);
-    await this.git.checkout({ ref });
   }
 
   private async getLatestTag(): Promise<string> {
@@ -98,12 +83,10 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
 }
 
 export function createHandler(params: {
-  context: Context;
   config: Config;
 }): Handler<GitTagSemverOutputs> {
-  const { context, config } = params;
+  const { config } = params;
   return new GitTagSemverHandler({
-    pullRequest: context.payload["pull_request"] as PullRequest,
     config,
     git: createGitCli(),
   });

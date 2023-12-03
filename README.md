@@ -1,16 +1,11 @@
-# github-action-typescript-template
+# git-tag-semver-action
 
-This is a template repository and several updates should be taken after using it as a repository generator:
-- Update this README to reflect the new action
-- Update package.json fields such as name, description, etc...
-- Update action.yml
-- Update entrypoint.sh to remap your command's arguments/inputs
-- Update the container name in docker-compose.yml
-- Update self-test.yml workflow
+This action manages semantic versioning compliant tags on a GitHub repository, and updates them
+according to user provided version bump types. Read more [here](action.yml).
 
 ## Usage
 
-Describe the action usage here, and provide an example invocation in a GitHub workflow.
+To come
 
 ## Development
 

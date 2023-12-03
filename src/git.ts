@@ -234,7 +234,7 @@ export class GitCli extends BaseCli<GitCli> {
    * Runs git push.
    *
    * @param options.remote - The "remote" repository that is destination of a push operation. This parameter
-   * can be either a URL (see the section GIT URLS below) or the name of a remote
+   * can be either a URL (see the section GIT URLS below) or the name of a remote. Defaults to "origin".
    * @param options.deletion - Whether to turn on deletion or not.
    * @param options.force - Use the --force option
    * @param options.ref - Specify what destination ref to update with what source object.
@@ -245,17 +245,15 @@ export class GitCli extends BaseCli<GitCli> {
     remote?: string;
     ref?: string;
   }): Promise<void> {
-    const { force, remote, deletion, ref } = options || {};
+    const { force, remote = "origin", deletion, ref } = options || {};
     const args = ["push"];
     if (force) {
       args.push("--force");
     }
-    if (remote != null) {
-      args.push(remote);
-    }
     if (deletion) {
       args.push("--delete");
     }
+    args.push(remote);
     if (ref != null) {
       args.push(ref);
     }

@@ -9,13 +9,11 @@ async function main() {
   core.debug(`received env: ${JSON.stringify(process.env, null, 2)}`);
   core.debug(`received context: ${JSON.stringify(context, null, 2)}`);
   const inputs = getInputs({
-    ["github-token"]: stringInput(),
     version: stringInput(),
   });
   const handler = createHandler({
     context,
     config: {
-      gitHubToken: inputs["github-token"],
       // TODO: https://github.com/infrastructure-blocks/ts-github/issues/7 parse the version against choices in the inputs.
       version: parseVersion(inputs.version),
     },

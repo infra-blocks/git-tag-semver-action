@@ -7,7 +7,7 @@ ONBUILD RUN apt-get update && \
     # Curl is required by NVM to install nodejs. \
     apt-get install -y curl git && \
     # Configure git to work with repos that are shared through volume in actions runtime. \
-    git config --global --add safe.directory '*' && \
+    git config --global --add safe.directory /github/workspace && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | PROFILE=/root/.profile bash && \
     # Remove line that turns off messages, since it prints an error message because we are in a container.
     sed -i '/mesg/d' /root/.profile && \

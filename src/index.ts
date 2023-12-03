@@ -12,7 +12,6 @@ async function main() {
     version: stringInput(),
   });
   const handler = createHandler({
-    context,
     config: {
       // TODO: https://github.com/infrastructure-blocks/ts-github/issues/7 parse the version against choices in the inputs.
       version: parseVersion(inputs.version),

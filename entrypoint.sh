@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
 
-export INPUT_VERSION="${1}"
-
-node /action/dist/index.js
+env INPUT_GITHUB-TOKEN="${1}" INPUT_VERSION="${2}" node /action/dist/index.js

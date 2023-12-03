@@ -6,6 +6,7 @@ import { getInputs, stringInput } from "@infra-blocks/github";
 import { parseVersion } from "./version.js";
 
 async function main() {
+  core.debug(`received env: ${JSON.stringify(process.env, null, 2)}`);
   core.debug(`received context: ${JSON.stringify(context, null, 2)}`);
   const inputs = getInputs({
     ["github-token"]: stringInput(),

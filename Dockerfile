@@ -4,11 +4,12 @@ FROM ubuntu:22.04 AS base
 ONBUILD COPY .nvmrc ./
 # Installs the node version of the project.
 ONBUILD RUN apt-get update && \
-    # Curl is also required by NVM to install nodejs. \
+    # Curl is required by NVM to install nodejs. \
     apt-get install -y curl git && \
+    # Configure git to work with repos that are shared through volume in actions runtime. \
+    git config --global --add safe.directory '*' && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | PROFILE=/root/.profile bash && \
-    # Remove line that turns off messages, since it prints an error message because we are \
-    # in a container. \
+    # Remove line that turns off messages, since it prints an error message because we are in a container.
     sed -i '/mesg/d' /root/.profile && \
     /bin/bash -l -c 'nvm install' && \
     # Install the node version's binary globally

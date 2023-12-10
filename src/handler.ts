@@ -14,7 +14,9 @@ export interface Config {
   version: GitTagVersion;
 }
 
-export type GitTagSemverOutputs = Outputs;
+export interface GitTagSemverOutputs extends Outputs {
+  tags: string;
+}
 
 export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
   private static ERROR_NAME = "GitTagSemverHandlerError";
@@ -35,7 +37,9 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
       releaseType: this.config.version,
     });
     await this.tagAndPublish({ tags });
-    return {};
+    return {
+      tags: JSON.stringify(tags),
+    };
   }
 
   private async getLatestTag(): Promise<string> {

@@ -21,6 +21,10 @@ inputs:
   version:
     description: The version bump type. Either "major", "minor" or "patch".
     required: true
+outputs:
+  tags:
+    description: |
+      The tags applied to the ref as a JSON array.
 runs:
   using: "docker"
   image: Dockerfile

@@ -4,17 +4,6 @@ import semver from "semver";
 
 export type GitTagVersion = "patch" | "minor" | "major";
 
-export function parseVersion(version: string): GitTagVersion {
-  switch (version) {
-    case "patch":
-    case "minor":
-    case "major":
-      return version;
-    default:
-      throw new Error(`unknown git tag version: ${version}`);
-  }
-}
-
 export function getVersionTags(params: {
   currentVersion: string;
   releaseType: GitTagVersion;

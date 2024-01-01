@@ -2,19 +2,22 @@ import * as core from "@actions/core";
 import { context } from "@actions/github";
 import { createHandler } from "./handler.js";
 import VError from "verror";
-import { getInputs, stringInput } from "@infra-blocks/github";
-import { parseVersion } from "./version.js";
+import { booleanInput, getInputs, stringInput } from "@infra-blocks/github";
+import { GitTagVersion } from "./version.js";
 
 async function main() {
   core.debug(`received env: ${JSON.stringify(process.env, null, 2)}`);
   core.debug(`received context: ${JSON.stringify(context, null, 2)}`);
   const inputs = getInputs({
-    version: stringInput(),
+    version: stringInput<GitTagVersion>({
+      choices: ["patch", "minor", "major"],
+    }),
+    "dry-run": booleanInput({ default: false }),
   });
   const handler = createHandler({
     config: {
-      // TODO: https://github.com/infrastructure-blocks/ts-github/issues/7 parse the version against choices in the inputs.
-      version: parseVersion(inputs.version),
+      version: inputs.version,
+      dryRun: inputs["dry-run"],
     },
   });
   const outputs = await handler.handle();

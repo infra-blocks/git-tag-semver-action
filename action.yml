@@ -21,10 +21,13 @@ inputs:
   version:
     description: The version bump type. Either "major", "minor" or "patch".
     required: true
+  dry-run:
+    description: Whether to tag.
+    required: false
 outputs:
   tags:
     description: |
-      The tags applied to the ref as a JSON array.
+      The tags applied to the ref as a JSON array. These will be populated even though dry-run is selected.
 runs:
   using: "docker"
   image: Dockerfile

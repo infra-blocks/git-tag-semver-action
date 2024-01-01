@@ -12,6 +12,7 @@ export interface Handler<O extends Outputs> {
 
 export interface Config {
   version: GitTagVersion;
+  dryRun: boolean;
 }
 
 export interface GitTagSemverOutputs extends Outputs {
@@ -76,6 +77,11 @@ export class GitTagSemverHandler implements Handler<GitTagSemverOutputs> {
       core.info(`tagging HEAD with: ${tag}`);
       // Have to tag force here to update an existing tag.
       await this.git.tag({ tag, force: true });
+    }
+
+    if (this.config.dryRun) {
+      core.info("dry run selected, not pushing changes");
+      return;
     }
 
     for (const tag of tags) {

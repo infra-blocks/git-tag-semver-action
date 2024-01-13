@@ -2,21 +2,6 @@ name: Git tag semver action
 description: |
   This action manages semantic versioning git tags. What it does depend on the version bump type provided by the
   user.
-  
-  The first time this action is run, it will create 3 tags:
-  - a partial major tag such as `v<major>`
-  - a partial minor tag such as `v<major>.<minor>`
-  - the full semver tag such as `v<major>.<minor>.<patch>`
-  
-  If the version bump is "patch", then this action creates a new semver tag like `v<major>.<minor>.<patch + 1>` on the
-  HEAD commit. Both the matching major and minor tags are *moved* to the same commit.
-  
-  If the version bump is "minor", then this action creates a new semver tag like `v<major>.<minor +1>.0`, a new
-  partial minor tag like `v<major>.<minor + 1>` and moves the partial major tag to the HEAD commit.
-  
-  If the version bump is "minor", then this action creates a new semver tag like `v<major + 1>.0.0`, a new
-  partial minor tag like `v<major + 1>.0` and a new partial major tag like `v<major + 1>`.
-
 inputs:
   version:
     description: The version bump type. Either "major", "minor" or "patch".
@@ -28,8 +13,41 @@ outputs:
   tags:
     description: |
       The tags applied to the ref as a JSON array. These will be populated even though dry-run is selected.
+    value: ${{ steps.get-new-version-tags.outputs.tags }}
 runs:
-  using: "docker"
-  image: Dockerfile
-  args:
-    - ${{ inputs.version }}
+  using: "composite"
+  steps:
+    - id: get-latest-tag
+      shell: bash
+      run: |
+        latest_tag=$(./scripts/get-latest-tag.sh)
+        # We remove the v because it's not a semver with it.
+        echo "latest-tag=${latest_tag:1}" >> "${GITHUB_OUTPUT}"
+    - id: semver-increment
+      uses: docker://public.ecr.aws/infrastructure-blocks/semver-increment-action:v1
+      with:
+        version: ${{ steps.get-latest-tag.outputs.latest-tag }}
+        type: ${{ inputs.version }}
+    - id: get-new-version-tags
+      shell: bash
+      run: |
+        major_tag="v${{ steps.semver-increment.outputs.major }}"
+        minor_tag="v${{ steps.semver-increment.outputs.major }}.${{ steps.semver-increment.outputs.minor }}"
+        full_tag="v${{ steps.semver-increment.outputs.version }}"
+        
+        echo "tags=[\"${major_tag}\",\"${minor_tag}\",\"${full_tag}\"]" >> "${GITHUB_OUTPUT}"
+    - shell: bash
+      run: |
+        mapfile -t tags < <(echo '${{ steps.get-new-version-tags.outputs.tags }}' | jq '.[]' -r)
+        for tag in "${tags[@]}"; do
+          # We use force because some tags will likely move.
+          git tag --force "${tag}"
+        done
+    - if: ${{ inputs.dry-run != 'true' }}
+      shell: bash
+      run: |
+        mapfile -t tags < <(echo '${{ steps.get-new-version-tags.outputs.tags }}' | jq '.[]' -r)
+        for tag in "${tags[@]}"; do
+          # We force push because some tags will likely move.
+          git push origin --force "${tag}"
+        done

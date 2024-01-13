@@ -1,7 +1,0 @@
-services:
-  action:
-    image: infra-blocks/git-tag-semver-action
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    container_name: git-tag-semver-action

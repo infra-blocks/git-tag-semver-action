@@ -1,0 +1,20 @@
+name: Composite action template
+description: |
+  This action does nothing meaningful.
+
+inputs:
+  example-input:
+    description: A useless input as an example
+    required: true
+outputs:
+  example-output:
+    description: You know it.
+    value: ${{ steps.generate-output.outputs.example-output }}
+runs:
+  using: "composite"
+  steps:
+    - run: echo "here is your input :${{ inputs.example-input }}."
+      shell: bash
+    - id: generate-output
+      run: echo "example-output=here is your output"
+      shell: bash

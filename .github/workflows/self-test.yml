@@ -12,10 +12,13 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - id: composite-action
+      - id: self-test
         uses: ./
         with:
           version: major
           dry-run: true
-      - run: |
-          echo ${{ steps.self-test.outputs.tags }}
+      - name: Show outputs
+        run: |
+          cat <<EOT
+            ${{ toJson(steps.self-test.outputs) }}
+          EOT

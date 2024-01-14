@@ -20,7 +20,13 @@ runs:
     - id: get-latest-tag
       shell: bash
       run: |
-        latest_tag=$(${{ github.action_path }}scripts/get-latest-tag.sh)
+        mapfile remote_tags < <(git ls-remote --tags origin "v*.*.*")
+        if test "${#remote_tags[@]}" -eq 0; then
+          latest_tag=v0.0.0
+        else
+          latest_tag=$(echo "${remote_tags[@]}" | cut -d '/' -f 3 | sort --reverse | head -1)
+        fi
+        
         # We remove the v because it's not a semver with it.
         echo "latest-tag=${latest_tag:1}" >> "${GITHUB_OUTPUT}"
     - id: semver-increment

@@ -20,7 +20,7 @@ runs:
     - id: get-latest-tag
       shell: bash
       run: |
-        latest_tag=$(./scripts/get-latest-tag.sh)
+        latest_tag=$(${{ github.action_path }}scripts/get-latest-tag.sh)
         # We remove the v because it's not a semver with it.
         echo "latest-tag=${latest_tag:1}" >> "${GITHUB_OUTPUT}"
     - id: semver-increment

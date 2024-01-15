@@ -18,44 +18,76 @@ partial minor tag like `v<major + 1>.0` and a new partial major tag like `v<majo
 
 ## Inputs
 
-|     Name      | Required | Description       |
-|:-------------:|:--------:|-------------------|
-| example-input |   true   | An example input. |
+|  Name   | Required | Description                                                |
+|:-------:|:--------:|------------------------------------------------------------|
+| version |   true   | The version bump type. Either "major", "minor" or "patch". |
+| dry-run |  false   | Whether to push the resulting tags.                        |
 
 ## Outputs
 
-|      Name      | Description        |
-|:--------------:|--------------------|
-| example-output | An example output. |
+| Name | Description                                                                                                       |
+|:----:|-------------------------------------------------------------------------------------------------------------------|
+| tags | The tags applied to the ref as a stringified JSON array. These will be populated even though dry-run is selected. |
 
 ## Permissions
 
-|     Scope     | Level | Reason   |
-|:-------------:|:-----:|----------|
-| pull-requests | read  | Because. |
+This action leverages the Git CLI but does not configure it. If you've configured it with the ${{ github.token }}
+then you would need the following permissions:
+
+|  Scope   | Level | Reason            |
+|:--------:|:-----:|-------------------|
+| contents | write | To push new tags. |
+
+However, it's possible that you have configured Git with a personal access token (PAT). This is required, for instance,
+if the tags you are pushing are [protected](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules).
+In this case, no permissions block is required.
 
 ## Usage
 
+### With GITHUB_TOKEN
+
 ```yaml
-name: Template Usage
+name: Git Tag Semver
 
 on:
   push: ~
 
-# The required permissions.
 permissions:
-  pull-requests: read
-
-# The suggested concurrency controls.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  example-job:
+  git-tag-semver:
     runs-on: ubuntu-22.04
     steps:
-      - uses: infrastructure-blocks/composite-action-template@v1
+      - uses: actions/checkout@v4
+      - id: git-tag
+        uses: infrastructure-blocks/git-tag-semver-action@v1
+        with:
+          version: major
+```
+
+### With PAT for protected tags
+
+```yaml
+name: Git Tag Semver
+
+on:
+  push: ~
+
+permissions:
+  contents: read # To checkout the code.
+
+jobs:
+  git-tag-semver:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+      - id: git-tag
+        uses: infrastructure-blocks/git-tag-semver-action@v1
+        with:
+          version: major
 ```
 
 ## Development

@@ -7,12 +7,12 @@ inputs:
     description: The version bump type. Either "major", "minor" or "patch".
     required: true
   dry-run:
-    description: Whether to tag.
+    description: Whether to push the resulting tags.
     required: false
 outputs:
   tags:
     description: |
-      The tags applied to the ref as a JSON array. These will be populated even though dry-run is selected.
+      The tags applied to the ref as a stringified JSON array.
     value: ${{ steps.get-new-version-tags.outputs.tags }}
 runs:
   using: "composite"

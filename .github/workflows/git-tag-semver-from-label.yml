@@ -1,21 +1,22 @@
 name: Git Tag Semver From Label
 
-# Running on all those events allow to check for the proper existence of a versioning tag.
 on:
-  pull_request:
+  push:
     branches:
       - master
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - labeled
-      - unlabeled
-      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   git-tag-semver-from-label:
-    uses: infrastructure-blocks/git-tag-semver-from-label-workflow/.github/workflows/git-tag-semver-from-label.yml@v1
+    uses: infrastructure-blocks/git-tag-semver-from-label-workflow/.github/workflows/git-tag-semver-from-label.yml@v2
     permissions:
-      contents: write # Required to push tags
-      pull-requests: write # Required to push PR comments
+      contents: write
+      pull-requests: write
+    secrets:
+      github-token: ${{ secrets.PAT }}

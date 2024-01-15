@@ -16,9 +16,47 @@ partial minor tag like `v<major>.<minor + 1>` and moves the partial major tag to
 If the version bump is "minor", then this action creates a new semver tag like `v<major + 1>.0.0`, a new
 partial minor tag like `v<major + 1>.0` and a new partial major tag like `v<major + 1>`.
 
+## Inputs
+
+|     Name      | Required | Description       |
+|:-------------:|:--------:|-------------------|
+| example-input |   true   | An example input. |
+
+## Outputs
+
+|      Name      | Description        |
+|:--------------:|--------------------|
+| example-output | An example output. |
+
+## Permissions
+
+|     Scope     | Level | Reason   |
+|:-------------:|:-----:|----------|
+| pull-requests | read  | Because. |
+
 ## Usage
 
-Describe usage of your action here.
+```yaml
+name: Template Usage
+
+on:
+  push: ~
+
+# The required permissions.
+permissions:
+  pull-requests: read
+
+# The suggested concurrency controls.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  example-job:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: infrastructure-blocks/composite-action-template@v1
+```
 
 ## Development
 

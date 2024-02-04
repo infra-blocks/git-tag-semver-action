@@ -1,4 +1,4 @@
-name: Self test
+name: Self Test
 
 on:
   push: ~

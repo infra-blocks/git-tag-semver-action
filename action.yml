@@ -20,6 +20,10 @@ runs:
     - id: get-latest-tag
       shell: bash
       run: |
+        if test "${{ runner.debug }}" = "1"; then
+          set -x
+        fi
+        
         mapfile remote_tags < <(git ls-remote --tags origin "v*.*.*")
         if test "${#remote_tags[@]}" -eq 0; then
           latest_tag=v0.0.0
@@ -37,6 +41,10 @@ runs:
     - id: get-new-version-tags
       shell: bash
       run: |
+        if test "${{ runner.debug }}" = "1"; then
+          set -x
+        fi
+        
         major_tag="v${{ steps.semver-increment.outputs.major }}"
         minor_tag="v${{ steps.semver-increment.outputs.major }}.${{ steps.semver-increment.outputs.minor }}"
         full_tag="v${{ steps.semver-increment.outputs.version }}"
@@ -44,6 +52,10 @@ runs:
         echo "tags=[\"${major_tag}\",\"${minor_tag}\",\"${full_tag}\"]" >> "${GITHUB_OUTPUT}"
     - shell: bash
       run: |
+        if test "${{ runner.debug }}" = "1"; then
+          set -x
+        fi
+        
         mapfile -t tags < <(echo '${{ steps.get-new-version-tags.outputs.tags }}' | jq '.[]' -r)
         for tag in "${tags[@]}"; do
           # We use force because some tags will likely move.
@@ -52,6 +64,10 @@ runs:
     - if: ${{ inputs.dry-run != 'true' }}
       shell: bash
       run: |
+        if test "${{ runner.debug }}" = "1"; then
+          set -x
+        fi
+        
         mapfile -t tags < <(echo '${{ steps.get-new-version-tags.outputs.tags }}' | jq '.[]' -r)
         for tag in "${tags[@]}"; do
           # We force push because some tags will likely move.

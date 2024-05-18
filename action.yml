@@ -34,7 +34,7 @@ runs:
         # We remove the v because it's not a semver with it.
         echo "latest-tag=${latest_tag:1}" >> "${GITHUB_OUTPUT}"
     - id: semver-increment
-      uses: docker://public.ecr.aws/infrastructure-blocks/semver-increment-action:v1
+      uses: docker://public.ecr.aws/infra-blocks/semver-increment-action:v1
       with:
         version: ${{ steps.get-latest-tag.outputs.latest-tag }}
         type: ${{ inputs.version }}

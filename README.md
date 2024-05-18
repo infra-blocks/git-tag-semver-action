@@ -1,7 +1,7 @@
 # git-tag-semver-action
-[![Release](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/git-tag-semver-from-label.yml)
-[![Self Test](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/self-test.yml/badge.svg)](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/self-test.yml)
-[![Update From Template](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/git-tag-semver-action/actions/workflows/update-from-template.yml)
+[![Release](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/git-tag-semver-from-label.yml)
+[![Self Test](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/self-test.yml/badge.svg)](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/self-test.yml)
+[![Update From Template](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infra-blocks/git-tag-semver-action/actions/workflows/update-from-template.yml)
 
 This action manages semantic versioning git tags. What it does depend on the version bump type provided by the
 user.
@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: git-tag
-        uses: infrastructure-blocks/git-tag-semver-action@v1
+        uses: infra-blocks/git-tag-semver-action@v1
         with:
           version: major
 ```
@@ -89,7 +89,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
       - id: git-tag
-        uses: infrastructure-blocks/git-tag-semver-action@v1
+        uses: infra-blocks/git-tag-semver-action@v1
         with:
           version: major
 ```
